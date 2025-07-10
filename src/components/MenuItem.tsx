@@ -18,8 +18,18 @@ export const MenuItem = ({ item }: MenuItemProps) => {
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group">
-      <div className="aspect-square bg-gray-50 flex items-center justify-center text-6xl p-8 group-hover:bg-gray-100 transition-colors">
-        {item.emoji}
+      <div className="aspect-square bg-gray-50 overflow-hidden">
+        {item.image ? (
+          <img 
+            src={item.image} 
+            alt={item.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="flex items-center justify-center text-6xl p-8 group-hover:bg-gray-100 transition-colors h-full">
+            {item.emoji}
+          </div>
+        )}
       </div>
       
       <div className="p-4">

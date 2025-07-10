@@ -5,6 +5,7 @@ export interface MenuItemType {
   description: string;
   price: number;
   emoji: string;
+  image?: string;
   rating: number;
   prepTime?: string;
   popular?: boolean;

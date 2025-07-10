@@ -1,6 +1,24 @@
 
 import { MenuData } from "@/types/menu";
 
+// Import food images
+import artisanCoffeeImg from "@/assets/artisan-coffee.jpg";
+import orangeJuiceImg from "@/assets/orange-juice.jpg";
+import greenTeaLatteImg from "@/assets/green-tea-latte.jpg";
+import grilledSalmonImg from "@/assets/grilled-salmon.jpg";
+import ribeyesteakImg from "@/assets/ribeye-steak.jpg";
+import chickenParmesanImg from "@/assets/chicken-parmesan.jpg";
+import truffleFriesImg from "@/assets/truffle-fries.jpg";
+import loadedNachosImg from "@/assets/loaded-nachos.jpg";
+import chickenWingsImg from "@/assets/chicken-wings.jpg";
+import avocadoToastImg from "@/assets/avocado-toast.jpg";
+import chocolateLavaCakeImg from "@/assets/chocolate-lava-cake.jpg";
+import cremeBruleeImg from "@/assets/creme-brulee.jpg";
+import tiramisuImg from "@/assets/tiramisu.jpg";
+import bruschettaImg from "@/assets/bruschetta.jpg";
+import calamariRingsImg from "@/assets/calamari-rings.jpg";
+import shrimpCocktailImg from "@/assets/shrimp-cocktail.jpg";
+
 export const menuData: MenuData = {
   beverages: [
     {
@@ -9,6 +27,7 @@ export const menuData: MenuData = {
       description: "Freshly roasted single-origin beans with rich, bold flavor and smooth finish",
       price: 4.50,
       emoji: "☕",
+      image: artisanCoffeeImg,
       rating: 4.8,
       prepTime: "3 min",
       popular: true
@@ -19,6 +38,7 @@ export const menuData: MenuData = {
       description: "Squeezed daily from premium Valencia oranges, packed with vitamin C",
       price: 3.25,
       emoji: "🍊",
+      image: orangeJuiceImg,
       rating: 4.6,
       prepTime: "2 min"
     },
@@ -28,6 +48,7 @@ export const menuData: MenuData = {
       description: "Ceremonial grade matcha blended with steamed milk and honey",
       price: 5.75,
       emoji: "🍵",
+      image: greenTeaLatteImg,
       rating: 4.7,
       prepTime: "4 min"
     },
@@ -67,6 +88,7 @@ export const menuData: MenuData = {
       description: "Atlantic salmon with herb crust, served with roasted vegetables and quinoa",
       price: 24.99,
       emoji: "🐟",
+      image: grilledSalmonImg,
       rating: 4.9,
       prepTime: "18 min",
       popular: true
@@ -77,6 +99,7 @@ export const menuData: MenuData = {
       description: "12oz prime cut with garlic mashed potatoes and seasonal greens",
       price: 32.99,
       emoji: "🥩",
+      image: ribeyesteakImg,
       rating: 4.8,
       prepTime: "25 min"
     },
@@ -86,6 +109,7 @@ export const menuData: MenuData = {
       description: "Breaded chicken breast with marinara sauce, mozzarella, and pasta",
       price: 19.99,
       emoji: "🍗",
+      image: chickenParmesanImg,
       rating: 4.7,
       prepTime: "20 min"
     },
@@ -125,6 +149,7 @@ export const menuData: MenuData = {
       description: "Crispy golden fries with truffle oil, parmesan, and fresh herbs",
       price: 8.99,
       emoji: "🍟",
+      image: truffleFriesImg,
       rating: 4.8,
       prepTime: "8 min",
       popular: true
@@ -135,6 +160,7 @@ export const menuData: MenuData = {
       description: "Tortilla chips with cheese, jalapeños, guacamole, and sour cream",
       price: 12.99,
       emoji: "🧀",
+      image: loadedNachosImg,
       rating: 4.6,
       prepTime: "10 min"
     },
@@ -144,6 +170,7 @@ export const menuData: MenuData = {
       description: "Buffalo wings with celery sticks and blue cheese dipping sauce",
       price: 11.99,
       emoji: "🍗",
+      image: chickenWingsImg,
       rating: 4.7,
       prepTime: "12 min"
     },
@@ -153,6 +180,7 @@ export const menuData: MenuData = {
       description: "Sourdough bread with smashed avocado, cherry tomatoes, and hemp seeds",
       price: 9.99,
       emoji: "🥑",
+      image: avocadoToastImg,
       rating: 4.5,
       prepTime: "5 min"
     },
@@ -182,6 +210,7 @@ export const menuData: MenuData = {
       description: "Warm chocolate cake with molten center, served with vanilla ice cream",
       price: 8.99,
       emoji: "🍫",
+      image: chocolateLavaCakeImg,
       rating: 4.9,
       prepTime: "8 min",
       popular: true
@@ -192,6 +221,7 @@ export const menuData: MenuData = {
       description: "Classic French custard with caramelized sugar crust and fresh berries",
       price: 7.99,
       emoji: "🍮",
+      image: cremeBruleeImg,
       rating: 4.8,
       prepTime: "5 min"
     },
@@ -201,6 +231,7 @@ export const menuData: MenuData = {
       description: "Traditional Italian dessert with coffee-soaked ladyfingers and mascarpone",
       price: 9.99,
       emoji: "🧁",
+      image: tiramisuImg,
       rating: 4.7,
       prepTime: "3 min"
     },
@@ -240,6 +271,7 @@ export const menuData: MenuData = {
       description: "Grilled bread topped with fresh tomatoes, basil, and balsamic glaze",
       price: 9.99,
       emoji: "🍅",
+      image: bruschettaImg,
       rating: 4.7,
       prepTime: "5 min"
     },
@@ -249,6 +281,7 @@ export const menuData: MenuData = {
       description: "Crispy fried squid rings with marinara sauce and lemon wedges",
       price: 12.99,
       emoji: "🦑",
+      image: calamariRingsImg,
       rating: 4.6,
       prepTime: "8 min",
       popular: true
@@ -268,6 +301,7 @@ export const menuData: MenuData = {
       description: "Chilled jumbo shrimp with cocktail sauce and lemon",
       price: 14.99,
       emoji: "🍤",
+      image: shrimpCocktailImg,
       rating: 4.8,
       prepTime: "3 min"
     },
