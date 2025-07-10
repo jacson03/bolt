@@ -1,11 +1,26 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import { MenuCategory } from "@/components/MenuCategory";
+import { MenuHeader } from "@/components/MenuHeader";
+import { CategoryNav } from "@/components/CategoryNav";
+import { menuData } from "@/data/menuData";
 
 const Index = () => {
+  const [activeCategory, setActiveCategory] = useState("beverages");
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-stone-100">
+      <MenuHeader />
+      <div className="container mx-auto px-4 py-8">
+        <CategoryNav 
+          categories={Object.keys(menuData)}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+        <MenuCategory 
+          category={activeCategory}
+          items={menuData[activeCategory as keyof typeof menuData]}
+        />
       </div>
     </div>
   );
