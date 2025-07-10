@@ -1,5 +1,5 @@
 
-import { Star, Clock } from "lucide-react";
+import { Clock, Star, Plus } from "lucide-react";
 import { MenuItemType } from "@/types/menu";
 
 interface MenuItemProps {
@@ -7,36 +7,60 @@ interface MenuItemProps {
 }
 
 export const MenuItem = ({ item }: MenuItemProps) => {
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star 
+        key={i} 
+        className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+      />
+    ));
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
-      <div className="h-48 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-        <div className="text-6xl">{item.emoji}</div>
+    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <div className="aspect-square bg-gray-50 flex items-center justify-center text-6xl p-8 group-hover:bg-gray-100 transition-colors">
+        {item.emoji}
       </div>
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-semibold text-gray-800">{item.name}</h3>
-          <span className="text-2xl font-bold text-amber-600">${item.price}</span>
-        </div>
-        <p className="text-gray-600 mb-4 text-sm leading-relaxed">{item.description}</p>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-            <span className="text-sm font-medium text-gray-700">{item.rating}</span>
-          </div>
-          {item.prepTime && (
-            <div className="flex items-center gap-1 text-gray-500">
-              <Clock className="w-4 h-4" />
-              <span className="text-sm">{item.prepTime}</span>
-            </div>
+      
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
+            {item.name}
+          </h3>
+          {item.popular && (
+            <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded font-medium">
+              Popular
+            </span>
           )}
         </div>
-        {item.popular && (
-          <div className="mt-3">
-            <span className="inline-block bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-medium">
-              Popular Choice
-            </span>
+        
+        <div className="flex items-center mb-3">
+          {renderStars(Math.floor(item.rating))}
+        </div>
+        
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+          {item.description}
+        </p>
+        
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-1 text-sm text-gray-500">
+            <Clock className="h-4 w-4" />
+            <span>{item.prepTime}</span>
           </div>
-        )}
+          <div className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+            🌱
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="text-xl font-bold text-gray-900">
+            ${item.price.toFixed(2)}
+          </div>
+          
+          <button className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors duration-200 shadow-md hover:shadow-lg">
+            <Plus className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
