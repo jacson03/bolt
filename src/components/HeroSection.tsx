@@ -1,7 +1,12 @@
 import { Search } from "lucide-react";
 import heroImage from "@/assets/food-hero-bg.jpg";
 
-export const HeroSection = () => {
+interface HeroSectionProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+}
+
+export const HeroSection = ({ searchTerm, onSearchChange }: HeroSectionProps) => {
   return (
     <div 
       className="relative h-80 bg-cover bg-center flex items-center justify-center"
@@ -21,6 +26,8 @@ export const HeroSection = () => {
             <input
               type="text"
               placeholder="Search for dishes..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
               className="w-full pl-10 pr-4 py-3 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
