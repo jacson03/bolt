@@ -28,60 +28,60 @@ export const FilterSection = ({
   };
 
   return (
-    <div className="bg-white border-b py-4">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-wrap gap-4 items-center">
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Category</label>
+    <div className="bg-card/60 backdrop-blur-xl border-b border-gold/20 py-6">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-wrap gap-6 items-center">
+          <div className="flex items-center space-x-3">
+            <label className="text-sm font-semibold text-gold font-inter tracking-wide">Category</label>
             <div className="relative">
               <select 
                 value={activeCategory}
                 onChange={(e) => onCategoryChange(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="appearance-none bg-card/40 backdrop-blur-sm border border-gold/20 rounded-xl px-6 py-3 pr-12 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/40 transition-all duration-300 shadow-pearl hover:shadow-gold"
               >
                 {categories.map((category) => (
-                  <option key={category} value={category}>
+                  <option key={category} value={category} className="bg-card text-foreground">
                     {categoryNames[category] || category}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gold/60 pointer-events-none" />
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Type</label>
+          <div className="flex items-center space-x-3">
+            <label className="text-sm font-semibold text-gold font-inter tracking-wide">Type</label>
             <div className="relative">
               <select 
                 value={typeFilter}
                 onChange={(e) => onTypeFilterChange(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="appearance-none bg-card/40 backdrop-blur-sm border border-gold/20 rounded-xl px-6 py-3 pr-12 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/40 transition-all duration-300 shadow-pearl hover:shadow-gold"
               >
-                <option value="all">All Items</option>
-                <option value="vegetarian">🌱 — Vegetarian</option>
-                <option value="gluten-free">🌾 — Gluten Free</option>
-                <option value="spicy">🔥 — Spicy</option>
-                <option value="popular">⭐ — Popular</option>
+                <option value="all" className="bg-card text-foreground">All Items</option>
+                <option value="vegetarian" className="bg-card text-foreground">🌱 — Vegetarian</option>
+                <option value="gluten-free" className="bg-card text-foreground">🌾 — Gluten Free</option>
+                <option value="spicy" className="bg-card text-foreground">🔥 — Spicy</option>
+                <option value="popular" className="bg-card text-foreground">⭐ — Popular</option>
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gold/60 pointer-events-none" />
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 ml-auto">
-            <label className="text-sm font-medium text-gray-700">Sort by</label>
+          <div className="flex items-center space-x-3 ml-auto">
+            <label className="text-sm font-semibold text-gold font-inter tracking-wide">Sort by</label>
             <div className="relative">
               <select 
                 value={sortBy}
                 onChange={(e) => onSortByChange(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="appearance-none bg-card/40 backdrop-blur-sm border border-gold/20 rounded-xl px-6 py-3 pr-12 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/40 transition-all duration-300 shadow-pearl hover:shadow-gold"
               >
-                <option value="default">Default Order</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Rating</option>
-                <option value="prep-time">Prep Time</option>
+                <option value="default" className="bg-card text-foreground">Default Order</option>
+                <option value="price-low" className="bg-card text-foreground">Price: Low to High</option>
+                <option value="price-high" className="bg-card text-foreground">Price: High to Low</option>
+                <option value="rating" className="bg-card text-foreground">Rating</option>
+                <option value="prep-time" className="bg-card text-foreground">Prep Time</option>
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gold/60 pointer-events-none" />
             </div>
           </div>
         </div>

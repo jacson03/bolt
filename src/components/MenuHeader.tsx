@@ -16,24 +16,26 @@ export const MenuHeader = ({ activeCategory, onCategoryChange }: MenuHeaderProps
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3">
+    <header className="bg-card/80 backdrop-blur-xl shadow-luxury border-b border-gold/20 sticky top-0 z-50">
+      <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Utensils className="h-6 w-6 text-orange-500" />
-            <h1 className="text-xl font-bold text-gray-800">Restaurant Menu</h1>
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-gold-gradient rounded-xl shadow-gold">
+              <Utensils className="h-6 w-6 text-luxury" />
+            </div>
+            <h1 className="text-2xl font-bold text-gold font-playfair tracking-wide">Epicurean Collection</h1>
           </div>
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex space-x-8">
             {categoryItems.map((item) => (
               <button
                 key={item.key}
                 onClick={() => onCategoryChange(item.key)}
-                className={`text-sm font-medium ${item.color} flex items-center space-x-1 transition-colors ${
-                  activeCategory === item.key ? 'font-bold' : ''
+                className={`text-sm font-medium ${item.color} flex items-center space-x-2 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-gold/10 border border-transparent ${
+                  activeCategory === item.key ? 'font-bold bg-gold/20 border-gold/30 shadow-gold text-shimmer' : 'hover:border-gold/20'
                 }`}
               >
-                <span>{item.emoji}</span>
-                <span>{item.label}</span>
+                <span className="text-lg">{item.emoji}</span>
+                <span className="font-inter">{item.label}</span>
               </button>
             ))}
           </nav>
