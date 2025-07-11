@@ -11,7 +11,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <MenuHeader />
+      <MenuHeader 
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
       <HeroSection />
       <FilterSection 
         categories={Object.keys(menuData)}
