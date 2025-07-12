@@ -27,7 +27,7 @@ export const ItemSidebar = ({ selectedItem, onClose }: ItemSidebarProps) => {
       />
       
       {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-96 bg-card border-r border-border shadow-professional z-50 transform transition-transform duration-300 ease-out animate-slide-in-left">
+      <div className="fixed right-0 top-0 h-full w-96 bg-card border-l border-border shadow-professional z-50 transform transition-transform duration-300 ease-out animate-slide-in-right">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-border">

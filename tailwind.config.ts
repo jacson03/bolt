@@ -125,6 +125,10 @@ export default {
 				'slide-in-left': {
 					'0%': { transform: 'translateX(-100%)' },
 					'100%': { transform: 'translateX(0)' }
+				},
+				'slide-in-right': {
+					'0%': { transform: 'translateX(100%)' },
+					'100%': { transform: 'translateX(0)' }
 				}
 			},
 			animation: {
@@ -135,6 +139,7 @@ export default {
 				'shimmer': 'shimmer 2s infinite',
 				'glow': 'glow 3s ease-in-out infinite',
 				'slide-in-left': 'slide-in-left 0.3s ease-out',
+				'slide-in-right': 'slide-in-right 0.3s ease-out',
 			}
 		}
 	},
