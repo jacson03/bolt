@@ -73,7 +73,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Clean Professional Background */
+      {/* Clean Professional Background */}
       <div className="absolute inset-0 bg-professional-glow pointer-events-none opacity-50" />
       <div className="relative z-10">
         <MenuHeader 
