@@ -72,33 +72,33 @@ const Index = () => {
   }, [activeCategory, searchTerm, typeFilter, sortBy]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Premium Background Pattern */}
-      <div className="absolute inset-0 bg-premium-glow pointer-events-none" />
+    <div className="min-h-screen bg-background relative">
+      {/* Clean Professional Background */
+      <div className="absolute inset-0 bg-professional-glow pointer-events-none opacity-50" />
       <div className="relative z-10">
-      <MenuHeader 
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
-      <HeroSection 
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-      />
-      <FilterSection 
-        categories={Object.keys(menuData)}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-        typeFilter={typeFilter}
-        onTypeFilterChange={setTypeFilter}
-        sortBy={sortBy}
-        onSortByChange={setSortBy}
-      />
-      <div className="container mx-auto px-4 py-12">
-        <MenuCategory 
-          category={activeCategory}
-          items={filteredAndSortedItems}
+        <MenuHeader 
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
         />
-      </div>
+        <HeroSection 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
+        <FilterSection 
+          categories={Object.keys(menuData)}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          typeFilter={typeFilter}
+          onTypeFilterChange={setTypeFilter}
+          sortBy={sortBy}
+          onSortByChange={setSortBy}
+        />
+        <div className="container mx-auto px-4 py-12">
+          <MenuCategory 
+            category={activeCategory}
+            items={filteredAndSortedItems}
+          />
+        </div>
       </div>
     </div>
   );

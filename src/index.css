@@ -2,101 +2,101 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Premium Luxury Design System - All colors MUST be HSL */
+/* Professional Hotel Menu Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    /* Modern Professional Core Colors */
-    --background: 220 26% 8%;
-    --foreground: 210 40% 98%;
+    /* Clean Hotel Menu Core Colors */
+    --background: 0 0% 100%;
+    --foreground: 222 20% 15%;
 
-    /* Modern Card & Surface Colors */
-    --card: 220 26% 10%;
-    --card-foreground: 210 40% 95%;
+    /* Hotel Card & Surface Colors */
+    --card: 0 0% 98%;
+    --card-foreground: 222 20% 15%;
 
     /* Popover & Overlay */
-    --popover: 220 26% 12%;
-    --popover-foreground: 210 40% 92%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 15%;
 
-    /* Modern Primary Brand - Sophisticated Blue */
-    --primary: 210 100% 65%;
-    --primary-foreground: 220 26% 8%;
+    /* Professional Primary - Clean Blue */
+    --primary: 220 91% 47%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Contemporary Secondary Colors */
-    --secondary: 220 20% 14%;
-    --secondary-foreground: 210 40% 88%;
+    /* Hotel Secondary Colors */
+    --secondary: 210 12% 95%;
+    --secondary-foreground: 222 20% 20%;
 
-    /* Modern Muted Colors */
-    --muted: 220 20% 12%;
-    --muted-foreground: 210 20% 70%;
+    /* Clean Muted Colors */
+    --muted: 210 12% 96%;
+    --muted-foreground: 222 20% 45%;
 
-    /* Modern Accent - Elegant Teal */
-    --accent: 195 90% 55%;
-    --accent-foreground: 220 26% 8%;
+    /* Professional Accent - Subtle Teal */
+    --accent: 190 70% 45%;
+    --accent-foreground: 0 0% 100%;
 
-    /* Luxury Color Palette - Modern Navy */
-    --luxury: 220 26% 10%;
-    --luxury-foreground: 210 40% 90%;
+    /* Hotel Brand Colors */
+    --hotel: 210 12% 95%;
+    --hotel-foreground: 222 20% 20%;
 
-    /* Modern Gold/Amber Accents */
-    --gold: 38 92% 65%;
-    --gold-foreground: 220 26% 8%;
+    /* Professional Gold/Amber Accents */
+    --gold: 38 75% 55%;
+    --gold-foreground: 0 0% 100%;
 
-    /* Contemporary Pearl/Cream */
-    --pearl: 210 20% 96%;
-    --pearl-foreground: 220 26% 15%;
+    /* Clean Pearl/Cream */
+    --pearl: 45 15% 96%;
+    --pearl-foreground: 222 20% 20%;
 
-    /* Modern Destructive */
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 210 40% 98%;
+    /* Professional Destructive */
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Form Elements */
-    --border: 220 20% 18%;
-    --input: 220 20% 16%;
-    --ring: 210 100% 65%;
+    /* Clean Form Elements */
+    --border: 210 12% 88%;
+    --input: 0 0% 100%;
+    --ring: 220 91% 47%;
 
-    /* Modern Premium Gradients */
-    --luxury-gradient: linear-gradient(135deg, hsl(220 26% 8%) 0%, hsl(220 26% 12%) 50%, hsl(220 20% 16%) 100%);
-    --gold-gradient: linear-gradient(135deg, hsl(38 92% 55%) 0%, hsl(38 92% 65%) 50%, hsl(38 92% 75%) 100%);
-    --pearl-gradient: linear-gradient(135deg, hsl(210 20% 92%) 0%, hsl(210 20% 96%) 50%, hsl(210 20% 98%) 100%);
-    --premium-glow: radial-gradient(circle at center, hsl(210 100% 65% / 0.08) 0%, transparent 70%);
+    /* Clean Hotel Gradients */
+    --hotel-gradient: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(210 12% 98%) 50%, hsl(210 12% 95%) 100%);
+    --gold-gradient: linear-gradient(135deg, hsl(38 75% 50%) 0%, hsl(38 75% 55%) 50%, hsl(38 75% 60%) 100%);
+    --pearl-gradient: linear-gradient(135deg, hsl(45 15% 94%) 0%, hsl(45 15% 96%) 50%, hsl(45 15% 98%) 100%);
+    --professional-glow: radial-gradient(circle at center, hsl(220 91% 47% / 0.03) 0%, transparent 70%);
 
-    /* Modern Premium Shadows */
-    --shadow-luxury: 0 25px 50px -12px hsl(220 26% 2% / 0.8), 0 0 40px hsl(210 100% 65% / 0.1);
-    --shadow-gold: 0 10px 30px -5px hsl(38 92% 50% / 0.3), 0 0 20px hsl(38 92% 65% / 0.2);
-    --shadow-pearl: 0 10px 25px -5px hsl(210 20% 85% / 0.2), 0 5px 15px hsl(210 20% 80% / 0.1);
-    --shadow-premium: 0 20px 40px -10px hsl(220 26% 2% / 0.6), 0 0 30px hsl(210 100% 65% / 0.08);
+    /* Clean Professional Shadows */
+    --shadow-hotel: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-gold: 0 4px 6px -1px hsl(38 75% 50% / 0.1), 0 2px 4px -2px hsl(38 75% 50% / 0.1);
+    --shadow-pearl: 0 2px 4px -1px hsl(45 15% 85% / 0.1), 0 1px 2px -1px hsl(45 15% 80% / 0.06);
+    --shadow-professional: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
 
     /* Border Radius */
     --radius: 0.75rem;
 
-    /* Modern Sidebar */
-    --sidebar-background: 220 26% 10%;
-    --sidebar-foreground: 210 40% 88%;
-    --sidebar-primary: 210 100% 65%;
-    --sidebar-primary-foreground: 220 26% 8%;
-    --sidebar-accent: 220 20% 14%;
-    --sidebar-accent-foreground: 210 40% 88%;
-    --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 210 100% 65%;
+    /* Clean Hotel Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 222 20% 20%;
+    --sidebar-primary: 220 91% 47%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 12% 95%;
+    --sidebar-accent-foreground: 222 20% 20%;
+    --sidebar-border: 210 12% 88%;
+    --sidebar-ring: 220 91% 47%;
   }
 
   .dark {
-    /* Enhanced modern dark mode */
-    --background: 220 26% 4%;
-    --foreground: 210 40% 98%;
-    --card: 220 26% 6%;
-    --card-foreground: 210 40% 95%;
-    --popover: 220 26% 8%;
-    --popover-foreground: 210 40% 92%;
-    --secondary: 220 20% 10%;
-    --secondary-foreground: 210 40% 88%;
-    --muted: 220 20% 8%;
-    --muted-foreground: 210 20% 75%;
-    --accent: 195 90% 55%;
-    --accent-foreground: 220 26% 4%;
-    --border: 220 20% 15%;
-    --input: 220 20% 12%;
+    /* Professional dark mode for hotel menu */
+    --background: 222 20% 8%;
+    --foreground: 210 12% 95%;
+    --card: 222 20% 10%;
+    --card-foreground: 210 12% 92%;
+    --popover: 222 20% 12%;
+    --popover-foreground: 210 12% 90%;
+    --secondary: 222 20% 15%;
+    --secondary-foreground: 210 12% 85%;
+    --muted: 222 20% 12%;
+    --muted-foreground: 210 12% 65%;
+    --accent: 190 70% 45%;
+    --accent-foreground: 0 0% 100%;
+    --border: 222 20% 20%;
+    --input: 222 20% 15%;
   }
 }
 
@@ -107,17 +107,17 @@
 
   body {
     @apply bg-background text-foreground font-inter;
-    background-image: var(--premium-glow);
+    background-image: var(--professional-glow);
   }
 
-  /* Premium Typography */
+  /* Professional Hotel Typography */
   h1, h2, h3, h4, h5, h6 {
     @apply font-playfair;
   }
 
-  /* Custom scrollbar */
+  /* Clean scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
   
   ::-webkit-scrollbar-track {
@@ -125,44 +125,40 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-gold/20 rounded-full;
+    @apply bg-primary/30 rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gold/40;
+    @apply bg-primary/50;
   }
 }
 
 @layer components {
-  /* Premium Button Styles */
-  .btn-luxury {
-    @apply bg-luxury-gradient text-gold border border-gold/20 shadow-luxury hover:shadow-gold transition-all duration-300;
+  /* Professional Hotel Button Styles */
+  .btn-hotel {
+    @apply bg-primary text-primary-foreground border border-primary shadow-hotel hover:shadow-professional transition-all duration-200;
   }
 
-  .btn-gold {
-    @apply bg-gold-gradient text-luxury border border-gold shadow-gold hover:shadow-luxury transition-all duration-300;
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground border border-border shadow-hotel hover:shadow-professional transition-all duration-200;
   }
 
-  /* Premium Card Effects */
-  .card-luxury {
-    @apply bg-card border border-gold/20 shadow-luxury backdrop-blur-sm;
+  /* Clean Hotel Card Effects */
+  .card-hotel {
+    @apply bg-card border border-border shadow-hotel;
   }
 
   .card-hover {
-    @apply hover:shadow-premium hover:border-gold/40 hover:-translate-y-1 transition-all duration-300;
+    @apply hover:shadow-professional hover:border-primary/20 hover:-translate-y-0.5 transition-all duration-200;
   }
 
-  /* Text Shimmer Effect */
-  .text-shimmer {
-    @apply bg-gold-gradient bg-clip-text text-transparent animate-glow;
+  /* Professional text highlight */
+  .text-highlight {
+    @apply text-primary font-medium;
   }
 
-  /* Premium Divider */
-  .divider-luxury {
-    @apply border-t border-gold/20 relative;
-  }
-  
-  .divider-luxury::before {
-    @apply content-[''] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gold rounded-full;
+  /* Clean Hotel Divider */
+  .divider-hotel {
+    @apply border-t border-border relative;
   }
 }
