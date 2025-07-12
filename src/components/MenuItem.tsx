@@ -4,9 +4,10 @@ import { MenuItemType } from "@/types/menu";
 
 interface MenuItemProps {
   item: MenuItemType;
+  onSelect: (item: MenuItemType) => void;
 }
 
-export const MenuItem = ({ item }: MenuItemProps) => {
+export const MenuItem = ({ item, onSelect }: MenuItemProps) => {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star 
@@ -17,7 +18,10 @@ export const MenuItem = ({ item }: MenuItemProps) => {
   };
 
   return (
-    <div className="card-luxury card-hover rounded-2xl overflow-hidden animate-fade-in group">
+    <div 
+      className="card-hotel card-hover rounded-2xl overflow-hidden animate-fade-in group cursor-pointer" 
+      onClick={() => onSelect(item)}
+    >
       <div className="relative h-56 overflow-hidden">
         {item.image ? (
           <img 
@@ -65,9 +69,15 @@ export const MenuItem = ({ item }: MenuItemProps) => {
         
         <div className="divider-luxury mb-4" />
         
-        <button className="w-full bg-luxury-gradient hover:bg-gold-gradient text-gold hover:text-luxury border border-gold/20 hover:border-gold/40 rounded-xl py-3 px-4 text-sm font-semibold tracking-wide transform hover:scale-105 transition-all duration-300 shadow-pearl hover:shadow-gold flex items-center justify-center space-x-2 group">
+        <button 
+          className="w-full bg-primary text-primary-foreground rounded-xl py-3 px-4 text-sm font-semibold hover:bg-primary/90 transition-all duration-200 shadow-hotel flex items-center justify-center space-x-2 group"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(item);
+          }}
+        >
           <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
-          <span>Add to Selection</span>
+          <span>View Details</span>
         </button>
       </div>
     </div>

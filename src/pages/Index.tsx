@@ -4,6 +4,7 @@ import { MenuCategory } from "@/components/MenuCategory";
 import { MenuHeader } from "@/components/MenuHeader";
 import { HeroSection } from "@/components/HeroSection";
 import { FilterSection } from "@/components/FilterSection";
+import { ItemSidebar } from "@/components/ItemSidebar";
 import { menuData } from "@/data/menuData";
 import { MenuItemType } from "@/types/menu";
 
@@ -12,6 +13,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
+  const [selectedItem, setSelectedItem] = useState<MenuItemType | null>(null);
 
   const filteredAndSortedItems = useMemo(() => {
     let items = menuData[activeCategory as keyof typeof menuData] || [];
@@ -71,6 +73,14 @@ const Index = () => {
     return sortedItems;
   }, [activeCategory, searchTerm, typeFilter, sortBy]);
 
+  const handleItemSelect = (item: MenuItemType) => {
+    setSelectedItem(item);
+  };
+
+  const handleCloseSidebar = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div className="min-h-screen bg-background relative">
       {/* Clean Professional Background */}
@@ -97,9 +107,16 @@ const Index = () => {
           <MenuCategory 
             category={activeCategory}
             items={filteredAndSortedItems}
+            onItemSelect={handleItemSelect}
           />
         </div>
       </div>
+      
+      {/* Sidebar */}
+      <ItemSidebar 
+        selectedItem={selectedItem}
+        onClose={handleCloseSidebar}
+      />
     </div>
   );
 };

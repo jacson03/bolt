@@ -121,6 +121,10 @@ export default {
 				'glow': {
 					'0%, 100%': { boxShadow: '0 0 20px hsl(var(--gold) / 0.3)' },
 					'50%': { boxShadow: '0 0 40px hsl(var(--gold) / 0.6)' }
+				},
+				'slide-in-left': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(0)' }
 				}
 			},
 			animation: {
@@ -130,6 +134,7 @@ export default {
 				'scale-in': 'scale-in 0.4s ease-out',
 				'shimmer': 'shimmer 2s infinite',
 				'glow': 'glow 3s ease-in-out infinite',
+				'slide-in-left': 'slide-in-left 0.3s ease-out',
 			}
 		}
 	},
