@@ -87,10 +87,10 @@ export default {
 				'premium-glow': 'var(--premium-glow)',
 			},
 			boxShadow: {
-				'luxury': 'var(--shadow-luxury)',
+				'hotel': 'var(--shadow-hotel)',
 				'gold': 'var(--shadow-gold)',
 				'pearl': 'var(--shadow-pearl)',
-				'premium': 'var(--shadow-premium)',
+				'professional': 'var(--shadow-professional)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
