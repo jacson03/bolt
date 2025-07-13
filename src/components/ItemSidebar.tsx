@@ -1,22 +1,23 @@
-import { X, Clock, Star } from "lucide-react";
+import { X, Minus, Plus, ShoppingCart } from "lucide-react";
 import { MenuItemType } from "@/types/menu";
 
-interface ItemSidebarProps {
-  selectedItem: MenuItemType | null;
-  onClose: () => void;
+interface CartItem extends MenuItemType {
+  quantity: number;
 }
 
-export const ItemSidebar = ({ selectedItem, onClose }: ItemSidebarProps) => {
-  if (!selectedItem) return null;
+interface ItemSidebarProps {
+  selectedItems: CartItem[];
+  onClose: () => void;
+  onUpdateQuantity: (itemId: string, quantity: number) => void;
+  onRemoveItem: (itemId: string) => void;
+}
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star 
-        key={i} 
-        className={`h-4 w-4 ${i < rating ? 'text-gold fill-current' : 'text-muted-foreground/30'}`} 
-      />
-    ));
-  };
+export const ItemSidebar = ({ selectedItems, onClose, onUpdateQuantity, onRemoveItem }: ItemSidebarProps) => {
+  if (selectedItems.length === 0) return null;
+
+  const subtotal = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.08; // 8% tax
+  const total = subtotal + tax;
 
   return (
     <>
@@ -30,81 +31,82 @@ export const ItemSidebar = ({ selectedItem, onClose }: ItemSidebarProps) => {
       <div className="fixed right-0 top-0 h-full w-96 bg-card border-l border-border shadow-professional z-50 transform transition-transform duration-300 ease-out animate-slide-in-right">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <h2 className="text-xl font-bold text-foreground font-playfair">Item Details</h2>
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <div className="flex items-center space-x-2">
+              <ShoppingCart className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold text-foreground font-playfair">Your Order</h2>
+              <span className="text-sm text-muted-foreground">({selectedItems.length} items)</span>
+            </div>
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-muted transition-colors duration-200"
-              aria-label="Close sidebar"
+              aria-label="Close cart"
             >
               <X className="h-5 w-5 text-muted-foreground" />
             </button>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6">
-            {/* Item Image */}
-            <div className="relative mb-6 rounded-xl overflow-hidden">
-              {selectedItem.image ? (
-                <img 
-                  src={selectedItem.image} 
-                  alt={selectedItem.name}
-                  className="w-full h-48 object-cover"
-                />
-              ) : (
-                <div className="flex items-center justify-center text-6xl p-8 bg-muted/20 h-48">
-                  {selectedItem.emoji}
+          {/* Cart Items */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {selectedItems.map((item) => (
+              <div key={item.id} className="bg-muted/20 rounded-lg p-3 border border-border">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-foreground text-sm">{item.name}</h4>
+                    <p className="text-xs text-muted-foreground">${item.price.toFixed(2)} each</p>
+                  </div>
+                  <button
+                    onClick={() => onRemoveItem(item.id)}
+                    className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                    aria-label="Remove item"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
-              )}
-              {selectedItem.popular && (
-                <div className="absolute top-3 right-3 bg-gold text-gold-foreground px-2 py-1 rounded-full text-xs font-bold">
-                  ⭐ Popular
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                      className="w-6 h-6 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </button>
+                    <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
+                    <button
+                      onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                      className="w-6 h-6 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="text-sm font-semibold text-foreground">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {/* Item Name */}
-            <h3 className="text-2xl font-bold text-foreground font-playfair mb-2">
-              {selectedItem.name}
-            </h3>
-
-            {/* Price */}
-            <div className="text-3xl font-bold text-primary mb-4 font-playfair">
-              ${selectedItem.price.toFixed(2)}
-            </div>
-
-            {/* Rating and Prep Time */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-1">
-                {renderStars(Math.floor(selectedItem.rating))}
-                <span className="text-sm text-muted-foreground ml-2">
-                  ({selectedItem.rating}/5)
-                </span>
               </div>
-              {selectedItem.prepTime && (
-                <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>{selectedItem.prepTime}</span>
-                </div>
-              )}
+            ))}
+          </div>
+
+          {/* Order Summary */}
+          <div className="border-t border-border p-4 space-y-3">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Subtotal:</span>
+                <span className="font-medium">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Tax (8%):</span>
+                <span className="font-medium">${tax.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold pt-2 border-t border-border">
+                <span>Total:</span>
+                <span className="text-primary">${total.toFixed(2)}</span>
+              </div>
             </div>
-
-            {/* Description */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">
-                Description
-              </h4>
-              <p className="text-muted-foreground leading-relaxed">
-                {selectedItem.description}
-              </p>
-            </div>
-
-            {/* Divider */}
-            <div className="divider-hotel mb-6" />
-
-            {/* Action Button */}
+            
             <button className="w-full bg-primary text-primary-foreground rounded-lg py-3 px-4 font-semibold hover:bg-primary/90 transition-colors duration-200 shadow-hotel">
-              Add to Order
+              Place Order
             </button>
           </div>
         </div>

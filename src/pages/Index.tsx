@@ -13,7 +13,11 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  const [selectedItem, setSelectedItem] = useState<MenuItemType | null>(null);
+  interface CartItem extends MenuItemType {
+    quantity: number;
+  }
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const filteredAndSortedItems = useMemo(() => {
     let items = menuData[activeCategory as keyof typeof menuData] || [];
@@ -74,11 +78,34 @@ const Index = () => {
   }, [activeCategory, searchTerm, typeFilter, sortBy]);
 
   const handleItemSelect = (item: MenuItemType) => {
-    setSelectedItem(item);
+    const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      setCartItems(cartItems.map(cartItem => 
+        cartItem.id === item.id 
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      ));
+    } else {
+      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+    }
+  };
+
+  const handleUpdateQuantity = (itemId: string, quantity: number) => {
+    if (quantity === 0) {
+      handleRemoveItem(itemId);
+    } else {
+      setCartItems(cartItems.map(item => 
+        item.id === itemId ? { ...item, quantity } : item
+      ));
+    }
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
   };
 
   const handleCloseSidebar = () => {
-    setSelectedItem(null);
+    setCartItems([]);
   };
 
   return (
@@ -114,8 +141,10 @@ const Index = () => {
       
       {/* Sidebar */}
       <ItemSidebar 
-        selectedItem={selectedItem}
+        selectedItems={cartItems}
         onClose={handleCloseSidebar}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
       />
     </div>
   );
