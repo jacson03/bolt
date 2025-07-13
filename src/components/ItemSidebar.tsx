@@ -1,9 +1,5 @@
 import { X, Minus, Plus, ShoppingCart } from "lucide-react";
-import { MenuItemType } from "@/types/menu";
-
-interface CartItem extends MenuItemType {
-  quantity: number;
-}
+import { CartItem } from "@/types/menu";
 
 interface ItemSidebarProps {
   selectedItems: CartItem[];
@@ -12,7 +8,7 @@ interface ItemSidebarProps {
   onRemoveItem: (itemId: string) => void;
 }
 
-export const ItemSidebar = ({ selectedItems, onClose, onUpdateQuantity, onRemoveItem }: ItemSidebarProps) => {
+export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onRemoveItem }: ItemSidebarProps) => {
   if (selectedItems.length === 0) return null;
 
   const subtotal = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);

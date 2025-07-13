@@ -11,6 +11,10 @@ export interface MenuItemType {
   popular?: boolean;
 }
 
+export interface CartItem extends MenuItemType {
+  quantity: number;
+}
+
 export interface MenuData {
   beverages: MenuItemType[];
   mainDishes: MenuItemType[];

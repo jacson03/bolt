@@ -6,17 +6,13 @@ import { HeroSection } from "@/components/HeroSection";
 import { FilterSection } from "@/components/FilterSection";
 import { ItemSidebar } from "@/components/ItemSidebar";
 import { menuData } from "@/data/menuData";
-import { MenuItemType } from "@/types/menu";
+import { MenuItemType, CartItem } from "@/types/menu";
 
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState("beverages");
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  interface CartItem extends MenuItemType {
-    quantity: number;
-  }
-
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const filteredAndSortedItems = useMemo(() => {
