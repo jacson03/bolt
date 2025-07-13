@@ -111,7 +111,7 @@ const Index = () => {
       
       <div className="relative z-10 flex">
         {/* Main Content */}
-        <div className={`flex-1 transition-all duration-300 ${cartItems.length > 0 ? 'mr-96' : ''}`}>
+        <div className={`flex-1 transition-all duration-300 ${cartItems.length > 0 ? 'mr-80' : ''}`}>
           <MenuHeader 
             activeCategory={activeCategory}
             onCategoryChange={setActiveCategory}
