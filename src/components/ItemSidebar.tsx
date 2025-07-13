@@ -16,16 +16,8 @@ export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onR
   const total = subtotal + tax;
 
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 transition-opacity duration-300"
-        onClick={onClose}
-      />
-      
-      {/* Sidebar */}
-      <div className="fixed right-0 top-0 h-full w-96 bg-card border-l border-border shadow-professional z-50 transform transition-transform duration-300 ease-out animate-slide-in-right">
-        <div className="flex flex-col h-full">
+    <div className="w-96 bg-card border-l border-border shadow-professional h-full flex flex-col animate-slide-in-right">
+      <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center space-x-2">
@@ -105,8 +97,7 @@ export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onR
               Place Order
             </button>
           </div>
-        </div>
       </div>
-    </>
+    </div>
   );
 };

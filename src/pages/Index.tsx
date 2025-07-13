@@ -105,43 +105,51 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background">
       {/* Clean Professional Background */}
       <div className="absolute inset-0 bg-professional-glow pointer-events-none opacity-50" />
-      <div className="relative z-10">
-        <MenuHeader 
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-        />
-        <HeroSection 
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
-        <FilterSection 
-          categories={Object.keys(menuData)}
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-          typeFilter={typeFilter}
-          onTypeFilterChange={setTypeFilter}
-          sortBy={sortBy}
-          onSortByChange={setSortBy}
-        />
-        <div className="container mx-auto px-4 py-12">
-          <MenuCategory 
-            category={activeCategory}
-            items={filteredAndSortedItems}
-            onItemSelect={handleItemSelect}
-          />
-        </div>
-      </div>
       
-      {/* Sidebar */}
-      <ItemSidebar 
-        selectedItems={cartItems}
-        onClose={handleCloseSidebar}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-      />
+      <div className="relative z-10 flex">
+        {/* Main Content */}
+        <div className={`flex-1 transition-all duration-300 ${cartItems.length > 0 ? 'mr-96' : ''}`}>
+          <MenuHeader 
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+          />
+          <HeroSection 
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+          <FilterSection 
+            categories={Object.keys(menuData)}
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+            typeFilter={typeFilter}
+            onTypeFilterChange={setTypeFilter}
+            sortBy={sortBy}
+            onSortByChange={setSortBy}
+          />
+          <div className="container mx-auto px-4 py-12">
+            <MenuCategory 
+              category={activeCategory}
+              items={filteredAndSortedItems}
+              onItemSelect={handleItemSelect}
+            />
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        {cartItems.length > 0 && (
+          <div className="fixed right-0 top-0 h-full">
+            <ItemSidebar 
+              selectedItems={cartItems}
+              onClose={handleCloseSidebar}
+              onUpdateQuantity={handleUpdateQuantity}
+              onRemoveItem={handleRemoveItem}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
