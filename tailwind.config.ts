@@ -85,6 +85,7 @@ export default {
 				'gold-gradient': 'var(--gold-gradient)',
 				'pearl-gradient': 'var(--pearl-gradient)',
 				'premium-glow': 'var(--premium-glow)',
+				'professional-glow': 'var(--professional-glow)',
 			},
 			boxShadow: {
 				'hotel': 'var(--shadow-hotel)',
