@@ -8,7 +8,7 @@ export const HeroSection = ({
   searchTerm,
   onSearchChange
 }: HeroSectionProps) => {
-  return <div className="relative h-96 bg-cover bg-center flex items-center justify-center overflow-hidden" style={{
+  return <div className="relative h-96 bg-cover bg-center flex items-end justify-center overflow-hidden pb-8" style={{
     backgroundImage: `url(${heroImage})`
   }}>
       <div className="absolute inset-0 bg-gradient-to-b from-luxury/70 via-luxury/50 to-luxury/80"></div>
