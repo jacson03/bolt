@@ -1,6 +1,7 @@
 
 import { Clock, Star, Plus } from "lucide-react";
 import { MenuItemType } from "@/types/menu";
+import { formatPrice } from "@/utils/currency";
 
 interface MenuItemProps {
   item: MenuItemType;
@@ -42,7 +43,7 @@ export const MenuItem = ({ item, onSelect }: MenuItemProps) => {
         )}
         <div className="absolute bottom-4 left-4 right-4">
           <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold text-gold font-playfair">${item.price.toFixed(2)}</span>
+            <span className="text-3xl font-bold text-gold font-playfair">{formatPrice(item.price)}</span>
             <div className="flex items-center space-x-1 bg-card/80 backdrop-blur-sm rounded-full px-3 py-1 shadow-pearl">
               {renderStars(Math.floor(item.rating))}
             </div>

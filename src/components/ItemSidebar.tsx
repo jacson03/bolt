@@ -1,5 +1,6 @@
 import { X, Minus, Plus, ShoppingCart } from "lucide-react";
 import { CartItem } from "@/types/menu";
+import { formatPrice, convertToRWF } from "@/utils/currency";
 
 interface ItemSidebarProps {
   selectedItems: CartItem[];
@@ -11,7 +12,7 @@ interface ItemSidebarProps {
 export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onRemoveItem }: ItemSidebarProps) => {
   if (selectedItems.length === 0) return null;
 
-  const total = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = selectedItems.reduce((sum, item) => sum + (convertToRWF(item.price) * item.quantity), 0);
 
   return (
     <div className="w-80 bg-card border-l border-border shadow-professional h-full flex flex-col animate-slide-in-right">
@@ -39,7 +40,7 @@ export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onR
               <div className="flex items-start justify-between mb-1.5">
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-foreground text-xs truncate">{item.name}</h4>
-                  <p className="text-xs text-muted-foreground">${item.price.toFixed(2)}</p>
+                  <p className="text-xs text-muted-foreground">{formatPrice(item.price)}</p>
                 </div>
                 <button
                   onClick={() => onRemoveItem(item.id)}
@@ -67,7 +68,7 @@ export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onR
                   </button>
                 </div>
                 <div className="text-xs font-semibold text-foreground">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {Math.round(convertToRWF(item.price) * item.quantity).toLocaleString()} RWF
                 </div>
               </div>
             </div>
@@ -79,7 +80,7 @@ export const ItemSidebar = ({ selectedItems = [], onClose, onUpdateQuantity, onR
           <div className="space-y-1 text-xs">
             <div className="flex justify-between text-sm font-bold">
               <span>Total:</span>
-              <span className="text-primary">${total.toFixed(2)}</span>
+              <span className="text-primary">{Math.round(total).toLocaleString()} RWF</span>
             </div>
           </div>
           
