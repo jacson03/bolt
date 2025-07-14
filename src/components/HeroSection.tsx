@@ -11,8 +11,8 @@ export const HeroSection = ({
   return <div className="relative h-96 bg-cover bg-center flex items-end justify-center overflow-hidden pb-8" style={{
     backgroundImage: `url(${heroImage})`
   }}>
-      <div className="absolute inset-0 bg-gradient-to-b from-luxury/70 via-luxury/50 to-luxury/80"></div>
-      <div className="absolute inset-0 bg-premium-glow"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-luxury/30 via-luxury/20 to-luxury/40"></div>
+      <div className="absolute inset-0 bg-premium-glow opacity-50"></div>
       <div className="relative z-10 text-center text-foreground px-6">
         
         
