@@ -1,14 +1,15 @@
 
-import { Clock, Star, Plus } from "lucide-react";
+import { Clock, Star, Plus, Loader2 } from "lucide-react";
 import { MenuItemType } from "@/types/menu";
 import { formatPrice } from "@/utils/currency";
 
 interface MenuItemProps {
   item: MenuItemType;
   onSelect: (item: MenuItemType) => void;
+  isLoading?: boolean;
 }
 
-export const MenuItem = ({ item, onSelect }: MenuItemProps) => {
+export const MenuItem = ({ item, onSelect, isLoading = false }: MenuItemProps) => {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star 
@@ -71,14 +72,26 @@ export const MenuItem = ({ item, onSelect }: MenuItemProps) => {
         <div className="divider-luxury mb-4" />
         
         <button 
-          className="w-full bg-primary text-primary-foreground rounded-xl py-3 px-4 text-sm font-semibold hover:bg-primary/90 transition-all duration-200 shadow-hotel flex items-center justify-center space-x-2 group"
+          className="w-full bg-primary text-primary-foreground rounded-xl py-3 px-4 text-sm font-semibold hover:bg-primary/90 transition-all duration-200 shadow-hotel flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={(e) => {
             e.stopPropagation();
-            onSelect(item);
+            if (!isLoading) {
+              onSelect(item);
+            }
           }}
+          disabled={isLoading}
         >
-          <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
-          <span>View Details</span>
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Adding...</span>
+            </>
+          ) : (
+            <>
+              <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
+              <span>Add to Cart</span>
+            </>
+          )}
         </button>
       </div>
     </div>

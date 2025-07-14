@@ -1,10 +1,11 @@
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { MenuCategory } from "@/components/MenuCategory";
 import { MenuHeader } from "@/components/MenuHeader";
 import { HeroSection } from "@/components/HeroSection";
 import { FilterSection } from "@/components/FilterSection";
 import { ItemSidebar } from "@/components/ItemSidebar";
+import { LoadingCard } from "@/components/LoadingCard";
 import { menuData } from "@/data/menuData";
 import { MenuItemType, CartItem } from "@/types/menu";
 
@@ -14,6 +15,16 @@ const Index = () => {
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredAndSortedItems = useMemo(() => {
     let items = menuData[activeCategory as keyof typeof menuData] || [];
@@ -73,7 +84,12 @@ const Index = () => {
     return sortedItems;
   }, [activeCategory, searchTerm, typeFilter, sortBy]);
 
-  const handleItemSelect = (item: MenuItemType) => {
+  const handleItemSelect = async (item: MenuItemType) => {
+    setIsAddingToCart(item.id);
+    
+    // Simulate loading time for better UX
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
     if (existingItem) {
       setCartItems(cartItems.map(cartItem => 
@@ -84,6 +100,8 @@ const Index = () => {
     } else {
       setCartItems([...cartItems, { ...item, quantity: 1 }]);
     }
+    
+    setIsAddingToCart(null);
   };
 
   const handleUpdateQuantity = (itemId: string, quantity: number) => {
@@ -130,11 +148,16 @@ const Index = () => {
             onSortByChange={setSortBy}
           />
           <div className="container mx-auto px-4 py-12">
-            <MenuCategory 
-              category={activeCategory}
-              items={filteredAndSortedItems}
-              onItemSelect={handleItemSelect}
-            />
+            {isLoading ? (
+              <LoadingCard message="Preparing your menu..." />
+            ) : (
+              <MenuCategory 
+                category={activeCategory}
+                items={filteredAndSortedItems}
+                onItemSelect={handleItemSelect}
+                isAddingToCart={isAddingToCart}
+              />
+            )}
           </div>
         </div>
 

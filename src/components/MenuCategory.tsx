@@ -6,6 +6,7 @@ interface MenuCategoryProps {
   category: string;
   items: MenuItemType[];
   onItemSelect: (item: MenuItemType) => void;
+  isAddingToCart?: string | null;
 }
 
 const categoryTitles: { [key: string]: string } = {
@@ -16,12 +17,17 @@ const categoryTitles: { [key: string]: string } = {
   appetizers: "Tempting Appetizers"
 };
 
-export const MenuCategory = ({ category, items, onItemSelect }: MenuCategoryProps) => {
+export const MenuCategory = ({ category, items, onItemSelect, isAddingToCart }: MenuCategoryProps) => {
   return (
     <div className="animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {items.map((item) => (
-          <MenuItem key={item.id} item={item} onSelect={onItemSelect} />
+          <MenuItem 
+            key={item.id} 
+            item={item} 
+            onSelect={onItemSelect}
+            isLoading={isAddingToCart === item.id}
+          />
         ))}
       </div>
     </div>
