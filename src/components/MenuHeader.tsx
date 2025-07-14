@@ -1,5 +1,6 @@
 
-import { Utensils } from "lucide-react";
+import { Utensils, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface MenuHeaderProps {
   activeCategory: string;
@@ -25,20 +26,28 @@ export const MenuHeader = ({ activeCategory, onCategoryChange }: MenuHeaderProps
             </div>
             <h1 className="text-2xl font-bold text-gold font-playfair tracking-wide">Epicurean Collection</h1>
           </div>
-          <nav className="hidden md:flex space-x-8">
-            {categoryItems.map((item) => (
-              <button
-                key={item.key}
-                onClick={() => onCategoryChange(item.key)}
-                className={`text-sm font-medium ${item.color} flex items-center space-x-2 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-gold/10 border border-transparent ${
-                  activeCategory === item.key ? 'font-bold bg-gold/20 border-gold/30 shadow-gold text-shimmer' : 'hover:border-gold/20'
-                }`}
-              >
-                <span className="text-lg">{item.emoji}</span>
-                <span className="font-inter">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          
+          <div className="flex items-center space-x-4">
+            <nav className="hidden md:flex space-x-8">
+              {categoryItems.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => onCategoryChange(item.key)}
+                  className={`text-sm font-medium ${item.color} flex items-center space-x-2 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-gold/10 border border-transparent ${
+                    activeCategory === item.key ? 'font-bold bg-gold/20 border-gold/30 shadow-gold text-shimmer' : 'hover:border-gold/20'
+                  }`}
+                >
+                  <span className="text-lg">{item.emoji}</span>
+                  <span className="font-inter">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+            
+            <Button variant="outline" size="sm" className="border-gold/30 hover:bg-gold/10">
+              <User className="h-4 w-4 mr-2" />
+              Account
+            </Button>
+          </div>
         </div>
       </div>
     </header>
