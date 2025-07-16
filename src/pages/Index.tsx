@@ -8,6 +8,7 @@ import { ItemSidebar } from "@/components/ItemSidebar";
 import { LoadingCard } from "@/components/LoadingCard";
 import { menuData } from "@/data/menuData";
 import { MenuItemType, CartItem } from "@/types/menu";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState("beverages");
@@ -17,6 +18,8 @@ const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   // Simulate initial loading
   useEffect(() => {
@@ -84,6 +87,22 @@ const Index = () => {
     return sortedItems;
   }, [activeCategory, searchTerm, typeFilter, sortBy]);
 
+  // New: Gather all items for global search
+  const allMenuItems = useMemo(() => {
+    return Object.entries(menuData).flatMap(([category, items]) =>
+      (items as MenuItemType[]).map(item => ({ ...item, _category: category }))
+    );
+  }, []);
+
+  // New: Filtered items for global search
+  const globalSearchResults = useMemo(() => {
+    if (!searchTerm) return null;
+    return allMenuItems.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [allMenuItems, searchTerm]);
+
   const handleItemSelect = async (item: MenuItemType) => {
     setIsAddingToCart(item.id);
     
@@ -126,7 +145,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Clean Professional Background */}
       <div className="absolute inset-0 bg-professional-glow pointer-events-none opacity-50" />
-      
       <div className="relative z-10 flex">
         {/* Main Content */}
         <div className={`flex-1 transition-all duration-300 ${cartItems.length > 0 ? 'mr-80' : ''}`}>
@@ -150,6 +168,32 @@ const Index = () => {
           <div className="container mx-auto px-4 py-12">
             {isLoading ? (
               <LoadingCard message="Preparing your menu..." />
+            ) : searchTerm && globalSearchResults ? (
+              globalSearchResults.length === 0 ? (
+                <div className="text-center text-muted-foreground text-lg py-12">No results found for "{searchTerm}".</div>
+              ) : (
+                <div>
+                  <div className="text-xl font-bold mb-6">Search Results for "{searchTerm}"</div>
+                  {/* Group results by category and render with MenuCategory */}
+                  {Object.entries(
+                    globalSearchResults.reduce((acc, item) => {
+                      if (!acc[item._category]) acc[item._category] = [];
+                      acc[item._category].push(item);
+                      return acc;
+                    }, {} as Record<string, typeof allMenuItems>)
+                  ).map(([category, items]) => (
+                    <div key={category} className="mb-10">
+                      <div className="text-lg font-semibold mb-2 capitalize">{category.replace(/([A-Z])/g, ' $1')}</div>
+                      <MenuCategory 
+                        category={category}
+                        items={items}
+                        onItemSelect={handleItemSelect}
+                        isAddingToCart={isAddingToCart}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
             ) : (
               <MenuCategory 
                 category={activeCategory}
@@ -160,10 +204,9 @@ const Index = () => {
             )}
           </div>
         </div>
-
         {/* Sidebar */}
         {cartItems.length > 0 && (
-          <div className="fixed right-0 top-0 h-full">
+          <div className="fixed right-0 top-0 h-full z-[100]">
             <ItemSidebar 
               selectedItems={cartItems}
               onClose={handleCloseSidebar}
