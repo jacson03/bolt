@@ -7,6 +7,13 @@ const Order = require('../models/Order');
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, phone, address } = req.body;
+    
+    console.log('User registration attempt:', { name, email });
+
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email, and password are required' });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
@@ -28,6 +35,10 @@ const registerUser = async (req, res) => {
     });
 
     // Generate JWT token
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+    
     const token = jwt.sign(
       { id: user.id, email: user.email, role: 'user' },
       process.env.JWT_SECRET,
@@ -54,6 +65,13 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log('User login attempt:', { email });
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
 
     // Find user
     const user = await User.findOne({ where: { email } });
@@ -68,6 +86,10 @@ const loginUser = async (req, res) => {
     }
 
     // Generate JWT token
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+    
     const token = jwt.sign(
       { id: user.id, email: user.email, role: 'user' },
       process.env.JWT_SECRET,

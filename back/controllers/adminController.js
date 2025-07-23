@@ -8,11 +8,18 @@ const Order = require('../models/Order');
 const registerAdmin = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    
+    console.log('Admin registration attempt:', { username, email });
+
+    // Validate input
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Username, email, and password are required' });
+    }
 
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({
       where: {
-        $or: [{ email }, { username }]
+        [require('sequelize').Op.or]: [{ email }, { username }]
       }
     });
 
@@ -32,6 +39,10 @@ const registerAdmin = async (req, res) => {
     });
 
     // Generate JWT token
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+    
     const token = jwt.sign(
       { id: admin.id, username: admin.username, role: 'admin' },
       process.env.JWT_SECRET,
@@ -57,6 +68,13 @@ const registerAdmin = async (req, res) => {
 const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log('Admin login attempt:', { email });
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
 
     // Find admin
     const admin = await Admin.findOne({ where: { email } });
@@ -71,6 +89,10 @@ const loginAdmin = async (req, res) => {
     }
 
     // Generate JWT token
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+    
     const token = jwt.sign(
       { id: admin.id, username: admin.username, role: 'admin' },
       process.env.JWT_SECRET,

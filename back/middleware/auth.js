@@ -6,8 +6,15 @@ const authenticateAdmin = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
+    console.log('Admin auth attempt, token present:', !!token);
+    
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured');
+      return res.status(500).json({ message: 'Server configuration error' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -28,8 +35,15 @@ const authenticateUser = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
+    console.log('User auth attempt, token present:', !!token);
+    
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured');
+      return res.status(500).json({ message: 'Server configuration error' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
