@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, User } from "lucide-react";
+import { Loader2, Shield } from "lucide-react";
 
-const LoginPage = () => {
+const AdminLoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -29,7 +29,7 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await fetch('http://localhost:5000/api/user/login', {
+      const response = await fetch('http://localhost:5000/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,9 +40,9 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('userToken', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        navigate('/user/dashboard');
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('adminData', JSON.stringify(data.admin));
+        navigate('/admin/dashboard');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -54,17 +54,17 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-luxury via-luxury/90 to-luxury/80 p-4">
       <Card className="w-full max-w-md shadow-professional">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <User className="h-8 w-8 text-primary" />
+            <div className="p-3 bg-gold/10 rounded-full">
+              <Shield className="h-8 w-8 text-gold" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-playfair">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-playfair text-luxury">Admin Login</CardTitle>
           <CardDescription>
-            Sign in to your account to continue
+            Access the restaurant management system
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -81,7 +81,7 @@ const LoginPage = () => {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="admin@restaurant.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -105,7 +105,7 @@ const LoginPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-gold hover:bg-gold/90 text-luxury font-semibold"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -120,19 +120,13 @@ const LoginPage = () => {
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
-              Sign up here
+            Don't have an admin account?{' '}
+            <Link to="/admin/register" className="text-gold hover:underline font-medium">
+              Register here
             </Link>
           </div>
           
           <div className="mt-4 text-center">
-            <Link to="/admin/login" className="text-sm text-gold hover:underline font-medium">
-              Admin Login
-            </Link>
-          </div>
-          
-          <div className="mt-2 text-center">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
               ← Back to Restaurant
             </Link>
@@ -143,4 +137,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default AdminLoginPage;

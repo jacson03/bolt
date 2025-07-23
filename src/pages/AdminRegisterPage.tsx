@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, User } from "lucide-react";
+import { Loader2, Shield } from "lucide-react";
 
-const LoginPage = () => {
+const AdminRegisterPage = () => {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -28,23 +30,33 @@ const LoginPage = () => {
     setIsLoading(true);
     setError("");
 
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:5000/api/user/login', {
+      const response = await fetch('http://localhost:5000/api/admin/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('userToken', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        navigate('/user/dashboard');
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('adminData', JSON.stringify(data.admin));
+        navigate('/admin/dashboard');
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.message || 'Registration failed');
       }
     } catch (error) {
       setError('Network error. Please try again.');
@@ -54,17 +66,17 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-luxury via-luxury/90 to-luxury/80 p-4">
       <Card className="w-full max-w-md shadow-professional">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <User className="h-8 w-8 text-primary" />
+            <div className="p-3 bg-gold/10 rounded-full">
+              <Shield className="h-8 w-8 text-gold" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-playfair">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-playfair text-luxury">Admin Registration</CardTitle>
           <CardDescription>
-            Sign in to your account to continue
+            Create your admin account to manage the restaurant
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,12 +88,26 @@ const LoginPage = () => {
             )}
             
             <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Enter username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="admin@restaurant.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -95,8 +121,22 @@ const LoginPage = () => {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm password"
+                value={formData.confirmPassword}
                 onChange={handleChange}
                 required
                 disabled={isLoading}
@@ -105,34 +145,28 @@ const LoginPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-gold hover:bg-gold/90 text-luxury font-semibold"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  Creating Account...
                 </>
               ) : (
-                'Sign In'
+                'Create Admin Account'
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
-              Sign up here
+            Already have an admin account?{' '}
+            <Link to="/admin/login" className="text-gold hover:underline font-medium">
+              Sign in here
             </Link>
           </div>
           
           <div className="mt-4 text-center">
-            <Link to="/admin/login" className="text-sm text-gold hover:underline font-medium">
-              Admin Login
-            </Link>
-          </div>
-          
-          <div className="mt-2 text-center">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
               ← Back to Restaurant
             </Link>
@@ -143,4 +177,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default AdminRegisterPage;

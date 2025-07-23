@@ -1,71 +1,210 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, UserPlus } from "lucide-react";
 
 const SignUpPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    address: ""
+  });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) {
-      setError("Please fill in all fields.");
+    setIsLoading(true);
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
       return;
     }
-    setError("");
-    // Simulate sign up (replace with real logic)
-    alert(`Account created for ${name} (${email})`);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          address: formData.address
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('userToken', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        navigate('/user/dashboard');
+      } else {
+        setError(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <form onSubmit={handleSubmit} className="bg-card p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center font-playfair">Create an Account</h2>
-        {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
-        <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-foreground">Name</label>
-          <input
-            type="text"
-            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-foreground">Email</label>
-          <input
-            type="email"
-            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium text-foreground">Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-        >
-          Sign Up
-        </button>
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link to="/login" className="text-primary hover:underline font-medium">Log in</Link>
-        </div>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4">
+      <Card className="w-full max-w-md shadow-professional">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="p-3 bg-primary/10 rounded-full">
+              <UserPlus className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-playfair">Create Account</CardTitle>
+          <CardDescription>
+            Join us to start ordering delicious food
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone (Optional)</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Address (Optional)</Label>
+              <Input
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Enter your address"
+                value={formData.address}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-muted-foreground">
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary hover:underline font-medium">
+              Sign in here
+            </Link>
+          </div>
+          
+          <div className="mt-4 text-center">
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+              ← Back to Restaurant
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default SignUpPage; 
+export default SignUpPage;
