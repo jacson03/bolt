@@ -19,7 +19,7 @@ interface UserData {
 
 interface Order {
   id: number;
-  items: any[];
+  items: unknown[];
   totalAmount: number;
   status: string;
   deliveryAddress?: string;
@@ -51,7 +51,7 @@ const UserDashboard = () => {
     }
     fetchUserData();
     fetchOrders();
-  }, []);
+  }, [navigate]);
 
   const fetchUserData = async () => {
     try {
