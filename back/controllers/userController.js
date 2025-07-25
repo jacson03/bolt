@@ -2,23 +2,25 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Order = require('../models/Order');
+const ResponseHandler = require('../utils/responseHandler');
+const logger = require('../utils/logger');
 
 // User Authentication
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, phone, address } = req.body;
     
-    console.log('User registration attempt:', { name, email });
+    logger.info('User registration attempt:', { name, email });
 
     // Validate input
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required' });
+      return ResponseHandler.error(res, 'Name, email, and password are required', 400);
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: 'User with this email already exists' });
+      return ResponseHandler.conflict(res, 'User with this email already exists');
     }
 
     // Hash password
@@ -45,8 +47,7 @@ const registerUser = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.status(201).json({
-      message: 'User registered successfully',
+    ResponseHandler.success(res, {
       token,
       user: {
         id: user.id,
@@ -55,10 +56,11 @@ const registerUser = async (req, res) => {
         phone: user.phone,
         address: user.address
       }
-    });
+    }, 'User registered successfully', 201);
+
   } catch (error) {
-    console.error('User registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
+    logger.error('User registration error:', error);
+    ResponseHandler.error(res, 'Server error during registration');
   }
 };
 
@@ -66,23 +68,23 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('User login attempt:', { email });
+    logger.info('User login attempt:', { email });
 
     // Validate input
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return ResponseHandler.error(res, 'Email and password are required', 400);
     }
 
     // Find user
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return ResponseHandler.unauthorized(res, 'Invalid credentials');
     }
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return ResponseHandler.unauthorized(res, 'Invalid credentials');
     }
 
     // Generate JWT token
@@ -96,8 +98,7 @@ const loginUser = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.json({
-      message: 'Login successful',
+    ResponseHandler.success(res, {
       token,
       user: {
         id: user.id,
@@ -106,10 +107,11 @@ const loginUser = async (req, res) => {
         phone: user.phone,
         address: user.address
       }
-    });
+    }, 'Login successful');
+
   } catch (error) {
-    console.error('User login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    logger.error('User login error:', error);
+    ResponseHandler.error(res, 'Server error during login');
   }
 };
 
@@ -119,10 +121,10 @@ const getUserProfile = async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ['password'] }
     });
-    res.json(user);
+    ResponseHandler.success(res, user, 'User profile retrieved successfully');
   } catch (error) {
-    console.error('Get user profile error:', error);
-    res.status(500).json({ message: 'Error fetching user profile' });
+    logger.error('Get user profile error:', error);
+    ResponseHandler.error(res, 'Error fetching user profile');
   }
 };
 
@@ -138,13 +140,13 @@ const updateUserProfile = async (req, res) => {
       const updatedUser = await User.findByPk(req.user.id, {
         attributes: { exclude: ['password'] }
       });
-      res.json({ message: 'Profile updated successfully', user: updatedUser });
+      ResponseHandler.success(res, updatedUser, 'Profile updated successfully');
     } else {
-      res.status(404).json({ message: 'User not found' });
+      ResponseHandler.notFound(res, 'User');
     }
   } catch (error) {
-    console.error('Update user profile error:', error);
-    res.status(500).json({ message: 'Error updating profile' });
+    logger.error('Update user profile error:', error);
+    ResponseHandler.error(res, 'Error updating profile');
   }
 };
 
@@ -162,10 +164,10 @@ const createOrder = async (req, res) => {
       customerPhone
     });
 
-    res.status(201).json({ message: 'Order created successfully', order });
+    ResponseHandler.success(res, order, 'Order created successfully', 201);
   } catch (error) {
-    console.error('Create order error:', error);
-    res.status(500).json({ message: 'Error creating order' });
+    logger.error('Create order error:', error);
+    ResponseHandler.error(res, 'Error creating order');
   }
 };
 
@@ -175,10 +177,10 @@ const getUserOrders = async (req, res) => {
       where: { userId: req.user.id },
       order: [['createdAt', 'DESC']]
     });
-    res.json(orders);
+    ResponseHandler.success(res, orders, 'Orders retrieved successfully');
   } catch (error) {
-    console.error('Get user orders error:', error);
-    res.status(500).json({ message: 'Error fetching orders' });
+    logger.error('Get user orders error:', error);
+    ResponseHandler.error(res, 'Error fetching orders');
   }
 };
 
@@ -191,11 +193,11 @@ const cancelOrder = async (req, res) => {
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return ResponseHandler.notFound(res, 'Order');
     }
 
     if (order.status === 'delivered' || order.status === 'cancelled') {
-      return res.status(400).json({ message: 'Cannot cancel this order' });
+      return ResponseHandler.error(res, 'Cannot cancel this order', 400);
     }
 
     await Order.update(
@@ -203,10 +205,10 @@ const cancelOrder = async (req, res) => {
       { where: { id, userId: req.user.id } }
     );
 
-    res.json({ message: 'Order cancelled successfully' });
+    ResponseHandler.success(res, null, 'Order cancelled successfully');
   } catch (error) {
-    console.error('Cancel order error:', error);
-    res.status(500).json({ message: 'Error cancelling order' });
+    logger.error('Cancel order error:', error);
+    ResponseHandler.error(res, 'Error cancelling order');
   }
 };
 
