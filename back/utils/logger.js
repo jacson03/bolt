@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const winston = require('winston');
 
 // Ensure logs directory exists
 const logsDir = path.join(__dirname, '../logs');
@@ -14,45 +15,37 @@ const logLevels = {
   DEBUG: 3
 };
 
-class Logger {
-  constructor() {
-    this.level = process.env.LOG_LEVEL || 'INFO';
-  }
+// Create winston logger
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'restaurant-api' },
+  transports: [
+    // Write all logs with importance level of `error` or less to `error.log`
+    new winston.transports.File({ 
+      filename: path.join(logsDir, 'error.log'), 
+      level: 'error' 
+    }),
+    // Write all logs with importance level of `info` or less to `combined.log`
+    new winston.transports.File({ 
+      filename: path.join(logsDir, 'combined.log') 
+    }),
+  ],
+});
 
-  log(level, message, meta = {}) {
-    if (logLevels[level] <= logLevels[this.level]) {
-      const timestamp = new Date().toISOString();
-      const logEntry = {
-        timestamp,
-        level,
-        message,
-        ...meta
-      };
-
-      // Console output
-      console.log(`[${timestamp}] ${level}: ${message}`, meta);
-
-      // File output
-      const logFile = path.join(logsDir, `${new Date().toISOString().split('T')[0]}.log`);
-      fs.appendFileSync(logFile, JSON.stringify(logEntry) + '\n');
-    }
-  }
-
-  error(message, meta = {}) {
-    this.log('ERROR', message, meta);
-  }
-
-  warn(message, meta = {}) {
-    this.log('WARN', message, meta);
-  }
-
-  info(message, meta = {}) {
-    this.log('INFO', message, meta);
-  }
-
-  debug(message, meta = {}) {
-    this.log('DEBUG', message, meta);
-  }
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple()
+    )
+  }));
 }
 
-module.exports = new Logger();
+module.exports = logger;

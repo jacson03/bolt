@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, UserPlus } from "lucide-react";
+import { userAPI } from "@/utils/api";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -39,31 +40,18 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/user/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-          address: formData.address
-        }),
+      const data = await userAPI.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        address: formData.address
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('userToken', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        navigate('/user/dashboard');
-      } else {
-        setError(data.message || 'Registration failed');
-      }
+      localStorage.setItem('userToken', data.token);
+      localStorage.setItem('userData', JSON.stringify(data.user));
+      navigate('/user/dashboard');
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setIsLoading(false);
     }

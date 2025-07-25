@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Shield } from "lucide-react";
+import { adminAPI } from "@/utils/api";
 
 const AdminRegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -37,29 +38,16 @@ const AdminRegisterPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password
-        }),
+      const data = await adminAPI.register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('adminToken', data.token);
-        localStorage.setItem('adminData', JSON.stringify(data.admin));
-        navigate('/admin/dashboard');
-      } else {
-        setError(data.message || 'Registration failed');
-      }
+      localStorage.setItem('adminToken', data.token);
+      localStorage.setItem('adminData', JSON.stringify(data.admin));
+      navigate('/admin/dashboard');
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setIsLoading(false);
     }

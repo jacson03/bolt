@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Shield } from "lucide-react";
+import { adminAPI } from "@/utils/api";
 
 const AdminLoginPage = () => {
   const [formData, setFormData] = useState({
@@ -29,25 +30,12 @@ const AdminLoginPage = () => {
     setError("");
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('adminToken', data.token);
-        localStorage.setItem('adminData', JSON.stringify(data.admin));
-        navigate('/admin/dashboard');
-      } else {
-        setError(data.message || 'Login failed');
-      }
+      const data = await adminAPI.login(formData);
+      localStorage.setItem('adminToken', data.token);
+      localStorage.setItem('adminData', JSON.stringify(data.admin));
+      navigate('/admin/dashboard');
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError(error instanceof Error ? error.message : 'Login failed');
     } finally {
       setIsLoading(false);
     }

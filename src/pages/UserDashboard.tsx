@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Package, LogOut, Edit } from "lucide-react";
+import { userAPI } from "@/utils/api";
 
 interface UserData {
   id: number;
@@ -55,26 +56,15 @@ const UserDashboard = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem('userToken');
-      const response = await fetch('http://localhost:5000/api/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+      const userData = await userAPI.getProfile();
+      setUser(userData);
+      setFormData({
+        name: userData.name || "",
+        phone: userData.phone || "",
+        address: userData.address || ""
       });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        setFormData({
-          name: userData.name || "",
-          phone: userData.phone || "",
-          address: userData.address || ""
-        });
-      } else {
-        setError('Failed to fetch user data');
-      }
     } catch (error) {
-      setError('Network error');
+      setError(error instanceof Error ? error.message : 'Failed to fetch user data');
     } finally {
       setIsLoading(false);
     }
@@ -82,17 +72,8 @@ const UserDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem('userToken');
-      const response = await fetch('http://localhost:5000/api/user/orders', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const ordersData = await response.json();
-        setOrders(ordersData);
-      }
+      const ordersData = await userAPI.getOrders();
+      setOrders(ordersData);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -105,27 +86,12 @@ const UserDashboard = () => {
     setSuccess("");
 
     try {
-      const token = localStorage.getItem('userToken');
-      const response = await fetch('http://localhost:5000/api/user/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.user);
-        setSuccess('Profile updated successfully');
-        setEditMode(false);
-      } else {
-        setError(data.message || 'Update failed');
-      }
+      const data = await userAPI.updateProfile(formData);
+      setUser(data.user);
+      setSuccess('Profile updated successfully');
+      setEditMode(false);
     } catch (error) {
-      setError('Network error');
+      setError(error instanceof Error ? error.message : 'Update failed');
     } finally {
       setIsUpdating(false);
     }
@@ -133,23 +99,11 @@ const UserDashboard = () => {
 
   const handleCancelOrder = async (orderId: number) => {
     try {
-      const token = localStorage.getItem('userToken');
-      const response = await fetch(`http://localhost:5000/api/user/orders/${orderId}/cancel`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setSuccess('Order cancelled successfully');
-        fetchOrders(); // Refresh orders
-      } else {
-        const data = await response.json();
-        setError(data.message || 'Failed to cancel order');
-      }
+      await userAPI.cancelOrder(orderId.toString());
+      setSuccess('Order cancelled successfully');
+      fetchOrders(); // Refresh orders
     } catch (error) {
-      setError('Network error');
+      setError(error instanceof Error ? error.message : 'Failed to cancel order');
     }
   };
 
