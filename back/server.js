@@ -1,70 +1,74 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const path = require('path');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const path = require("path");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 // Load environment variables
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-const { adminSequelize, userSequelize } = require('./config/database');
-const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes');
-const publicRoutes = require('./routes/publicRoutes');
-const logger = require('./utils/logger');
-const ResponseHandler = require('./utils/responseHandler');
+const sequelize = require("./config/database");
+const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/userRoutes");
+const publicRoutes = require("./routes/publicRoutes");
+const logger = require("./utils/logger");
+const ResponseHandler = require("./utils/responseHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: {
-    error: 'Too many requests from this IP, please try again later.'
-  }
+    error: "Too many requests from this IP, please try again later.",
+  },
 });
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 
 // Middleware
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      'http://localhost:8080',
-      'http://localhost:3000', 
-      'http://localhost:5173',
-      'http://127.0.0.1:8080',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:5173',
-      'https://localhost:8080',
-      'https://localhost:3000',
-      'https://localhost:5173'
-    ];
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      logger.warn('Blocked by CORS:', { origin });
-      callback(null, true); // Allow for development - change in production
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:8080",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "https://localhost:8080",
+        "https://localhost:3000",
+        "https://localhost:5173",
+      ];
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        logger.warn("Blocked by CORS:", { origin });
+        callback(null, true); // Allow for development - change in production
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Handle preflight requests
-app.options('*', cors());
+app.options("*", cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,27 +77,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    body: req.method === 'POST' || req.method === 'PUT' ? 'present' : 'none'
+    userAgent: req.get("User-Agent"),
+    body: req.method === "POST" || req.method === "PUT" ? "present" : "none",
   });
   next();
 });
 
 // Routes
-app.use('/api/public', publicRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/user', userRoutes);
+app.use("/api/public", publicRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/user", userRoutes);
 
 // 404 handler
-app.use('*', (req, res) => {
-  ResponseHandler.notFound(res, 'API endpoint');
+app.use("*", (req, res) => {
+  ResponseHandler.notFound(res, "API endpoint");
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  logger.error('Unhandled error:', err);
-  ResponseHandler.error(res, 
-    process.env.NODE_ENV === 'development' ? err.message : 'Internal server error',
+  logger.error("Unhandled error:", err);
+  ResponseHandler.error(
+    res,
+    process.env.NODE_ENV === "development"
+      ? err.message
+      : "Internal server error",
     500
   );
 });
@@ -102,46 +109,40 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     // Test database connections
-    await adminSequelize.authenticate();
-    logger.info('Admin database connection established successfully.');
-    
-    await userSequelize.authenticate();
-    logger.info('User database connection established successfully.');
+    await sequelize.authenticate();
+    logger.info("MySQL database connection established successfully.");
 
     // Sync database models
-    await adminSequelize.sync({ alter: true });
-    logger.info('Admin database synced successfully.');
-    
-    await userSequelize.sync({ alter: true });
-    logger.info('User database synced successfully.');
+    await sequelize.sync({ alter: true });
+    logger.info("Database synced successfully.");
 
     // Start server
     app.listen(PORT, () => {
       logger.info(`🚀 Server is running on port ${PORT}`);
-      logger.info(`📊 Health check: http://localhost:${PORT}/api/public/health`);
+      logger.info(
+        `📊 Health check: http://localhost:${PORT}/api/public/health`
+      );
       logger.info(`👑 Admin API: http://localhost:${PORT}/api/admin`);
       logger.info(`👤 User API: http://localhost:${PORT}/api/user`);
       logger.info(`🌐 Public API: http://localhost:${PORT}/api/public`);
-      logger.info(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`🔧 Environment: ${process.env.NODE_ENV || "development"}`);
     });
   } catch (error) {
-    logger.error('Unable to start server:', error);
+    logger.error("Unable to start server:", error);
     process.exit(1);
   }
 };
 
 // Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  await adminSequelize.close();
-  await userSequelize.close();
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received, shutting down gracefully");
+  await sequelize.close();
   process.exit(0);
 });
 
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  await adminSequelize.close();
-  await userSequelize.close();
+process.on("SIGINT", async () => {
+  logger.info("SIGINT received, shutting down gracefully");
+  await sequelize.close();
   process.exit(0);
 });
 
