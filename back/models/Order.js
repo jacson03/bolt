@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { userSequelize } = require('../config/database');
+const sequelize = require('../config/database');
 
-const Order = userSequelize.define('Order', {
+const Order = sequelize.define('Order', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

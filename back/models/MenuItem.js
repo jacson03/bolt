@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { adminSequelize } = require('../config/database');
+const sequelize = require('../config/database');
 
-const MenuItem = adminSequelize.define('MenuItem', {
+const MenuItem = sequelize.define('MenuItem', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

@@ -1,52 +1,28 @@
-const { Sequelize } = require('sequelize');
-const path = require('path');
-const fs = require('fs');
+// config/database.js
+require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
-// Ensure databases directory exists
-const dbDir = path.join(__dirname, '../databases');
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-  console.log('Created databases directory');
-}
-
-// Create separate databases for admin and user
-const adminSequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: path.join(__dirname, '../databases/admin.sqlite'),
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, "", {
+  host: process.env.DB_HOST, // 'localhost'
+  port: process.env.DB_PORT || 3306,
+  dialect: "mysql",
+  logging: process.env.NODE_ENV === "development" ? console.log : false,
   define: {
     timestamps: true,
     underscored: false,
   },
 });
 
-const userSequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: path.join(__dirname, '../databases/user.sqlite'),
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  define: {
-    timestamps: true,
-    underscored: false,
-  },
-});
-
-// Test connections
-const testConnections = async () => {
+const testConnection = async () => {
   try {
-    await adminSequelize.authenticate();
-    console.log('✅ Admin database connection established successfully.');
-    
-    await userSequelize.authenticate();
-    console.log('✅ User database connection established successfully.');
-  } catch (error) {
-    console.error('❌ Unable to connect to databases:', error);
+    await sequelize.authenticate();
+    console.log("✅ Connected to MySQL database successfully.");
+  } catch (err) {
+    console.error("❌ Failed to connect to MySQL database:", err);
   }
 };
 
-// Test connections on startup
-testConnections();
+// Run the connection test
+testConnection();
 
-module.exports = {
-  adminSequelize,
-  userSequelize
-};
+module.exports = sequelize;

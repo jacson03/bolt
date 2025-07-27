@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Shield, Package, ShoppingCart, LogOut, Plus, Edit, Trash2 } from "lucide-react";
 import { adminAPI } from "@/utils/api";
-
+import { useAuth } from "@/context/authContext";
 interface AdminData {
   id: number;
   username: string;
@@ -48,6 +48,7 @@ interface Order {
 }
 
 const AdminDashboard = () => {
+  const { logout } = useAuth();
   const [admin, setAdmin] = useState<AdminData | null>(null);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -69,12 +70,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      navigate('/admin/login');
-      return;
-    }
-    
+    // Remove token check - handled by ProtectedRoute
     const adminData = localStorage.getItem('adminData');
     if (adminData) {
       setAdmin(JSON.parse(adminData));
@@ -82,12 +78,12 @@ const AdminDashboard = () => {
     
     fetchMenuItems();
     fetchOrders();
-  }, [navigate]);
+  }, []);
 
   const fetchMenuItems = async () => {
     try {
       const data = await adminAPI.getMenuItems();
-      setMenuItems(data);
+      setMenuItems(data.data);
     } catch (error) {
       setError('Failed to fetch menu items');
     } finally {
@@ -98,7 +94,7 @@ const AdminDashboard = () => {
   const fetchOrders = async () => {
     try {
       const data = await adminAPI.getOrders();
-      setOrders(data);
+      setOrders(data.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -184,6 +180,7 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
+    logout()
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminData');
     navigate('/');

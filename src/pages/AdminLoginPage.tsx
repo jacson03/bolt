@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Shield } from "lucide-react";
 import { adminAPI } from "@/utils/api";
-
+import { useAuth } from "@/context/authContext";
 const AdminLoginPage = () => {
+  const { setAdminToken } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +27,7 @@ const AdminLoginPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -31,11 +38,12 @@ const AdminLoginPage = () => {
 
     try {
       const data = await adminAPI.login(formData);
-      localStorage.setItem('adminToken', data.token);
-      localStorage.setItem('adminData', JSON.stringify(data.admin));
-      navigate('/admin/dashboard');
+      localStorage.setItem("adminToken", data.data.token);
+      setAdminToken(data.data.token);
+      localStorage.setItem("adminData", JSON.stringify(data.data.admin));
+      navigate("/admin/dashboard");
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Login failed');
+      setError(error instanceof Error ? error.message : "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +58,9 @@ const AdminLoginPage = () => {
               <Shield className="h-8 w-8 text-gold" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-playfair text-luxury">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-playfair text-luxury">
+            Admin Login
+          </CardTitle>
           <CardDescription>
             Access the restaurant management system
           </CardDescription>
@@ -62,7 +72,7 @@ const AdminLoginPage = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -91,8 +101,8 @@ const AdminLoginPage = () => {
               />
             </div>
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-gold hover:bg-gold/90 text-luxury font-semibold"
               disabled={isLoading}
             >
@@ -102,20 +112,26 @@ const AdminLoginPage = () => {
                   Signing in...
                 </>
               ) : (
-                'Sign In'
+                "Sign In"
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an admin account?{' '}
-            <Link to="/admin/register" className="text-gold hover:underline font-medium">
+            Don't have an admin account?{" "}
+            <Link
+              to="/admin/register"
+              className="text-gold hover:underline font-medium"
+            >
               Register here
             </Link>
           </div>
-          
+
           <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              to="/"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               ← Back to Restaurant
             </Link>
           </div>
