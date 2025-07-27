@@ -31,8 +31,19 @@ const LoginPage = () => {
 
     try {
       const data = await userAPI.login(formData);
-      localStorage.setItem('userToken', data.token);
-      localStorage.setItem('userData', JSON.stringify(data.user));
+      console.log('Login response:', data); // More detailed logging
+      
+      if (!data || !data.data.token) {
+        throw new Error('Invalid response: Missing token');
+      }
+      
+      localStorage.setItem('userToken', data.data.token);
+      localStorage.setItem('userData', JSON.stringify(data.data.user));
+      
+      // Verify token was set
+      const storedToken = localStorage.getItem('userToken');
+      console.log('Stored token:', storedToken);
+      
       navigate('/user/dashboard');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Login failed');

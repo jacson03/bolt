@@ -46,7 +46,7 @@ const registerUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
-
+    console.log(token)
     ResponseHandler.success(res, {
       token,
       user: {

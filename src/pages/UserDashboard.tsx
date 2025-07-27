@@ -57,7 +57,8 @@ const UserDashboard = () => {
   const fetchUserData = async () => {
     try {
       const userData = await userAPI.getProfile();
-      setUser(userData);
+      console.log(userData)
+      setUser(userData.data);
       setFormData({
         name: userData.name || "",
         phone: userData.phone || "",
@@ -73,7 +74,7 @@ const UserDashboard = () => {
   const fetchOrders = async () => {
     try {
       const ordersData = await userAPI.getOrders();
-      setOrders(ordersData);
+      setOrders(ordersData.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
