@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Package, LogOut, Edit } from "lucide-react";
 import { userAPI } from "@/utils/api";
+import { useAuth } from "@/context/authContext";
 
 interface UserData {
   id: number;
@@ -30,6 +37,7 @@ interface Order {
 }
 
 const UserDashboard = () => {
+  const { logout } = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,14 +48,14 @@ const UserDashboard = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    address: ""
+    address: "",
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem("userToken");
     if (!token) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     fetchUserData();
@@ -57,15 +65,17 @@ const UserDashboard = () => {
   const fetchUserData = async () => {
     try {
       const userData = await userAPI.getProfile();
-      console.log(userData)
+      console.log(userData);
       setUser(userData.data);
       setFormData({
         name: userData.name || "",
         phone: userData.phone || "",
-        address: userData.address || ""
+        address: userData.address || "",
       });
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to fetch user data');
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch user data"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +86,7 @@ const UserDashboard = () => {
       const ordersData = await userAPI.getOrders();
       setOrders(ordersData.data);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -89,10 +99,11 @@ const UserDashboard = () => {
     try {
       const data = await userAPI.updateProfile(formData);
       setUser(data.user);
-      setSuccess('Profile updated successfully');
+      setSuccess("Profile updated successfully");
       setEditMode(false);
+      fetchUserData()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Update failed');
+      setError(error instanceof Error ? error.message : "Update failed");
     } finally {
       setIsUpdating(false);
     }
@@ -101,28 +112,38 @@ const UserDashboard = () => {
   const handleCancelOrder = async (orderId: number) => {
     try {
       await userAPI.cancelOrder(orderId.toString());
-      setSuccess('Order cancelled successfully');
+      setSuccess("Order cancelled successfully");
       fetchOrders(); // Refresh orders
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to cancel order');
+      setError(
+        error instanceof Error ? error.message : "Failed to cancel order"
+      );
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userData');
-    navigate('/');
+    logout();
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    navigate("/");
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-500';
-      case 'confirmed': return 'bg-blue-500';
-      case 'preparing': return 'bg-orange-500';
-      case 'ready': return 'bg-green-500';
-      case 'delivered': return 'bg-gray-500';
-      case 'cancelled': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case "pending":
+        return "bg-yellow-500";
+      case "confirmed":
+        return "bg-blue-500";
+      case "preparing":
+        return "bg-orange-500";
+      case "ready":
+        return "bg-green-500";
+      case "delivered":
+        return "bg-gray-500";
+      case "cancelled":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
@@ -185,7 +206,7 @@ const UserDashboard = () => {
                     size="sm"
                   >
                     <Edit className="h-4 w-4 mr-2" />
-                    {editMode ? 'Cancel' : 'Edit'}
+                    {editMode ? "Cancel" : "Edit"}
                   </Button>
                 </div>
               </CardHeader>
@@ -197,7 +218,9 @@ const UserDashboard = () => {
                       <Input
                         id="name"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
                         required
                       />
                     </div>
@@ -206,7 +229,9 @@ const UserDashboard = () => {
                       <Input
                         id="phone"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
+                        }
                       />
                     </div>
                     <div className="space-y-2">
@@ -214,7 +239,9 @@ const UserDashboard = () => {
                       <Input
                         id="address"
                         value={formData.address}
-                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, address: e.target.value })
+                        }
                       />
                     </div>
                     <Button type="submit" disabled={isUpdating}>
@@ -224,27 +251,37 @@ const UserDashboard = () => {
                           Updating...
                         </>
                       ) : (
-                        'Update Profile'
+                        "Update Profile"
                       )}
                     </Button>
                   </form>
                 ) : (
                   <div className="space-y-4">
                     <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Name</Label>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Name
+                      </Label>
                       <p className="text-lg">{user?.name}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Email</Label>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Email
+                      </Label>
                       <p className="text-lg">{user?.email}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Phone</Label>
-                      <p className="text-lg">{user?.phone || 'Not provided'}</p>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Phone
+                      </Label>
+                      <p className="text-lg">{user?.phone || "Not provided"}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-muted-foreground">Address</Label>
-                      <p className="text-lg">{user?.address || 'Not provided'}</p>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Address
+                      </Label>
+                      <p className="text-lg">
+                        {user?.address || "Not provided"}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -256,9 +293,7 @@ const UserDashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Order History</CardTitle>
-                <CardDescription>
-                  View and manage your orders
-                </CardDescription>
+                <CardDescription>View and manage your orders</CardDescription>
               </CardHeader>
               <CardContent>
                 {orders.length === 0 ? (
@@ -278,9 +313,11 @@ const UserDashboard = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge className={getStatusColor(order.status)}>
-                              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                              {order.status.charAt(0).toUpperCase() +
+                                order.status.slice(1)}
                             </Badge>
-                            {(order.status === 'pending' || order.status === 'confirmed') && (
+                            {(order.status === "pending" ||
+                              order.status === "confirmed") && (
                               <Button
                                 size="sm"
                                 variant="destructive"
@@ -292,12 +329,22 @@ const UserDashboard = () => {
                           </div>
                         </div>
                         <div className="text-sm space-y-1">
-                          <p><strong>Total:</strong> {order.totalAmount.toLocaleString()} RWF</p>
-                          <p><strong>Customer:</strong> {order.customerName}</p>
+                          <p>
+                            <strong>Total:</strong>{" "}
+                            {order.totalAmount.toLocaleString()} RWF
+                          </p>
+                          <p>
+                            <strong>Customer:</strong> {order.customerName}
+                          </p>
                           {order.deliveryAddress && (
-                            <p><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
+                            <p>
+                              <strong>Delivery Address:</strong>{" "}
+                              {order.deliveryAddress}
+                            </p>
                           )}
-                          <p><strong>Items:</strong> {order.items.length} item(s)</p>
+                          <p>
+                            <strong>Items:</strong> {order.items.length} item(s)
+                          </p>
                         </div>
                       </div>
                     ))}

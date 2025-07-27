@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User } from "lucide-react";
 import { userAPI } from "@/utils/api";
-
+import { useAuth } from "@/context/authContext";
 const LoginPage = () => {
+  const { setUserToken } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +27,7 @@ const LoginPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -31,22 +38,21 @@ const LoginPage = () => {
 
     try {
       const data = await userAPI.login(formData);
-      console.log('Login response:', data); // More detailed logging
-      
+      console.log("Login response:", data); // More detailed logging
+
       if (!data || !data.data.token) {
-        throw new Error('Invalid response: Missing token');
+        throw new Error("Invalid response: Missing token");
       }
-      
-      localStorage.setItem('userToken', data.data.token);
-      localStorage.setItem('userData', JSON.stringify(data.data.user));
-      
+      setUserToken(data.data.token);
+      localStorage.setItem("userToken", data.data.token);
+      localStorage.setItem("userData", JSON.stringify(data.data.user));
       // Verify token was set
-      const storedToken = localStorage.getItem('userToken');
-      console.log('Stored token:', storedToken);
-      
-      navigate('/user/dashboard');
+      const storedToken = localStorage.getItem("userToken");
+      console.log("Stored token:", storedToken);
+
+      navigate("/user/dashboard");
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Login failed');
+      setError(error instanceof Error ? error.message : "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -62,9 +68,7 @@ const LoginPage = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-playfair">Welcome Back</CardTitle>
-          <CardDescription>
-            Sign in to your account to continue
-          </CardDescription>
+          <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -73,7 +77,7 @@ const LoginPage = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -102,37 +106,42 @@ const LoginPage = () => {
               />
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Signing in...
                 </>
               ) : (
-                'Sign In'
+                "Sign In"
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-primary hover:underline font-medium"
+            >
               Sign up here
             </Link>
           </div>
-          
+
           <div className="mt-4 text-center">
-            <Link to="/admin/login" className="text-sm text-gold hover:underline font-medium">
+            <Link
+              to="/admin/login"
+              className="text-sm text-gold hover:underline font-medium"
+            >
               Admin Login
             </Link>
           </div>
-          
+
           <div className="mt-2 text-center">
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              to="/"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               ← Back to Restaurant
             </Link>
           </div>
